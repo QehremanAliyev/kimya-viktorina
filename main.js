@@ -66,6 +66,12 @@ const questions = [
     },
 
     {
+        question: "d orbitalında maksimum neçə elektron olur ? ?",
+        choices: ["6", "5", "10", "7"],
+        answer: 2
+    },
+
+    {
         question: "Etil spirtinin 5 % -li məhluluunda hansı maddə var ?",
         choices: ["Kükürd", "Yod", "Brom", "Karbon"],
         answer: 1
@@ -93,6 +99,12 @@ const questions = [
         question: "Fotosintez prosesini sürətləndirici və karbohidratların toplanmasına kömək edir ?",
         choices: ["Azot", "Kalium", "Fosfor", "Natrium"],
         answer: 1
+    },
+
+    {
+        question: "E1 < E2 << E3 <E4 buna əsasən elementin yerləşdiyi qrupu müəyyən edin.",
+        choices: ["3", "4", "1", "2"],
+        answer: 3
     },
 
     {
@@ -126,6 +138,12 @@ const questions = [
     },
 
     {
+        question: "On tam dolmuş orbital və üç boş orbitalı olan elementin sıra nömrəsini tapın.",
+        choices: ["25", "13", "23", "33"],
+        answer: 2
+    },
+
+    {
         question: "1889-cu ildə istifadəyə verilmiş Eyfel qülləsi vaxtaşırı qüllənin rənglənməsinə görə 60 ton boya sərf olunur, bunun səbəbini  nə ilə izah edə bilərsiniz ?",
         choices: ["Korreziya", "Elektroliz", "Hidroliz", "Hidratlaşma"],
         answer: 0
@@ -152,6 +170,12 @@ const questions = [
     {
         question: "Kibritin  ucu hansı maddədən ibarətdir ?",
         choices: ["Qırmızı fosfor", "Bertole duzu", "Qlauber duzu", "Qara fosfor"],
+        answer: 1
+    },
+
+    {
+        question: "Normal halda üç tək elektronu olan neçənci qrup elementidir ?",
+        choices: ["4", "7", "3", "5"],
         answer: 1
     },
 
@@ -188,6 +212,7 @@ const questions = [
 
 let currentQuestionIndex = 0;
 let score = 0;
+let userAnswers = new Array(questions.length).fill(null);
 
 document.addEventListener('DOMContentLoaded', () => {
     showQuestion();
@@ -202,50 +227,79 @@ function showQuestion() {
     choicesElements.forEach((button, index) => {
         button.textContent = questions[currentQuestionIndex].choices[index];
         button.disabled = false;
+        button.classList.remove('correct', 'incorrect');
     });
-    resultElement.textContent = '';
-    document.getElementById('next-button').style.display = 'none';
+
+    if (userAnswers[currentQuestionIndex] !== null) {
+        highlightAnswer(userAnswers[currentQuestionIndex]);
+    } else {
+        resultElement.textContent = '';
+    }
+
+    document.getElementById('next-button').style.display = 'block';
+    document.getElementById('back-button').style.display = currentQuestionIndex > 0 ? 'block' : 'none';
 }
 
 function selectAnswer(choiceIndex) {
+    userAnswers[currentQuestionIndex] = choiceIndex;
+    highlightAnswer(choiceIndex);
+}
+
+function highlightAnswer(choiceIndex) {
     const correctAnswerIndex = questions[currentQuestionIndex].answer;
     const resultElement = document.getElementById('result');
     const choicesElements = document.querySelectorAll('.choice');
+
+    choicesElements.forEach((button, index) => {
+        button.disabled = true;
+        if (index === correctAnswerIndex) {
+            button.classList.add('correct');
+        } else if (index === choiceIndex) {
+            button.classList.add('incorrect');
+        }
+    });
 
     if (choiceIndex === correctAnswerIndex) {
         resultElement.textContent = 'Doğru!';
         resultElement.style.color = 'green';
         score++;
     } else {
-        resultElement.textContent = `Yanlış! Düzgün cavab ${questions[currentQuestionIndex].choices[correctAnswerIndex]}.`;
+        resultElement.textContent = `Yanlış! Düzgün cavab - ${questions[currentQuestionIndex].choices[correctAnswerIndex]}.`;
         resultElement.style.color = 'red';
     }
-
-    choicesElements.forEach(button => {
-        button.disabled = true;
-    });
-    document.getElementById('next-button').style.display = 'block';
 }
 
 function nextQuestion() {
-    currentQuestionIndex++;
-    if (currentQuestionIndex < questions.length) {
+    if (currentQuestionIndex < questions.length - 1) {
+        currentQuestionIndex++;
         showQuestion();
     } else {
         showScore();
     }
 }
 
+function previousQuestion() {
+    if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        showQuestion();
+    }
+}
+
 function showScore() {
+    const totalScore = score; // Düzəltmə: totalScore dəyişənini əlavə etdim
+    const totalQuestions = questions.length; // Düzəltmə: totalQuestions dəyişənini əlavə etdim
+
     document.getElementById('quiz').style.display = 'none';
     document.getElementById('next-button').style.display = 'none';
+    document.getElementById('back-button').style.display = 'none';
     document.getElementById('score-container').style.display = 'block';
-    document.getElementById('score').textContent = `${score} / ${questions.length}`;
+    document.getElementById('score').textContent = `${totalScore} / ${totalQuestions}`; // Düzəltmə: totalScore və totalQuestions istifadə edildi
 }
 
 function restartQuiz() {
     currentQuestionIndex = 0;
     score = 0;
+    userAnswers.fill(null);
     document.getElementById('quiz').style.display = 'block';
     document.getElementById('score-container').style.display = 'none';
     showQuestion();

@@ -19,12 +19,14 @@
             </div>
             <div id="result"></div>
         </div>
-        <button id="next-button" onclick="nextQuestion()">Növbəti</button>
+        <div class="navigation">
+            <button id="back-button" onclick="previousQuestion()">Geri</button>
+            <button id="next-button" onclick="nextQuestion()">Növbəti</button>
+        </div>
         <div id="score-container">
             <h2>Sizin nəticəniz: <span id="score"></span></h2>
             <button id="restart-button" onclick="restartQuiz()">Yenidən Başla</button>
         </div>
     </div>
-    <script src="script.js"></script>
 </body>
 </html>
