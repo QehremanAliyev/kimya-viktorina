@@ -157,7 +157,7 @@ const questions = [
 
     {
         question: "3. Bu maddə kristal qəfəsinin quruluşuna və bərkliyinə görə almaza oxşayır və ondan yanıcı və cilalayıcı alətlər hazırlanır.",
-        choices: ["SiH4;", "Si", "SiO2", "SiC"],
+        choices: ["SiH4", "Si", "SiO2", "SiC"],
         answer: 3
     },
 
